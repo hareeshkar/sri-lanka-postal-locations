@@ -1,0 +1,55 @@
+{
+  "name": "sri-lanka-postal-locations",
+  "version": "1.0.0",
+  "description": "Sri Lanka districts and postal towns with district_id, coordinates, and helpers for District → City pickers.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE.md",
+    "THIRD-PARTY-LICENSES.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "sri lanka",
+    "districts",
+    "postal codes",
+    "cities",
+    "lk",
+    "location picker",
+    "dropdown"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hareeshkar/sri-lanka-postal-locations.git"
+  },
+  "author": "Hareeshkar Ravi",
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.3",
+    "vitest": "^4.1.10"
+  }
+}
