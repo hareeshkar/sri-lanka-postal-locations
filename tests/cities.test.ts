@@ -93,6 +93,11 @@ describe('searchCities (country-wide, no district/province required)', () => {
     expect(searchCities('', 5)).toHaveLength(5);
     expect(searchCities('a', 3)).toHaveLength(3);
   });
+
+  it('treats limit 0 consistently whether or not a query is given', () => {
+    expect(searchCities('', 0)).toEqual([]);
+    expect(searchCities('kattankudi', 0)).toEqual([]);
+  });
 });
 
 describe('getCitiesByPostcode', () => {

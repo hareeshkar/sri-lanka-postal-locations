@@ -30,6 +30,7 @@
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
@@ -46,8 +47,13 @@
     "type": "git",
     "url": "git+https://github.com/hareeshkar/sri-lanka-postal-locations.git"
   },
+  "bugs": {
+    "url": "https://github.com/hareeshkar/sri-lanka-postal-locations/issues"
+  },
+  "homepage": "https://github.com/hareeshkar/sri-lanka-postal-locations#readme",
   "author": "Hareeshkar Ravi",
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.10",
     "tsup": "^8.5.1",
     "typescript": "^5.7.3",
     "vitest": "^4.1.10"

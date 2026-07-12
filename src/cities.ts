@@ -33,7 +33,10 @@ export const searchCitiesInDistrict = (districtNameEn: string, query: string): S
 /** Country-wide typeahead search, not scoped to a district — matches name_en or postcode. */
 export const searchCities = (query: string, limit?: number): SriLankaCity[] => {
   const trimmedQuery = query.trim().toLowerCase();
-  if (!trimmedQuery) return limit ? sortByName(cityList).slice(0, limit) : sortByName(cityList);
+  if (!trimmedQuery) {
+    const all = sortByName(cityList);
+    return typeof limit === 'number' ? all.slice(0, limit) : all;
+  }
   const matches = sortByName(
     cityList.filter(
       (c) => c.name_en.toLowerCase().includes(trimmedQuery) || c.postcode.includes(trimmedQuery),
