@@ -341,7 +341,7 @@ one-time update.
 
 | Change (1.0.0 → this release) | Rows | Where to look |
 |---|---|---|
-| Removed: no government source confirmed the row | 195 | `data/unverified.csv` (`id` column) |
+| Removed: no government source lists the postcode, town and district together | 195 | `data/unverified.csv` (`id` column) |
 | Added: post offices in the directory that were missing | 162 | `data/changes-2022-directory.csv`, `status = ADD` |
 | District changed (`district_id`) | 286 | `old_district`, `new_district` |
 | Post-office name changed | 233 | `old_name`, `new_name` |
@@ -351,12 +351,20 @@ one-time update.
 **The two CSV files**
 
 - `data/changes-2022-directory.csv` lists every row that differs from 1.0.0,
-  including the 162 added rows (703 in total). Columns: `id`, `status`
+  including the 162 added rows. It has 703 rows, but row `359` is listed with a
+  name change (`Mount .Lavinia`) that the data does not contain, so 702 rows
+  differ. Columns: `id`, `status`
   (`DISTRICT-FIX`, `SPELLING-FIX`, `POSTCODE-FIX`, `WEB-VERIFIED`, `ADD`), the
   old and new `postcode`, `name`, and `district`, `source`, and `evidence_line`.
-  The evidence line is the exact directory line, or the government URL used.
+  The evidence line is the directory line as extracted from the PDF, with its
+  Sinhala and Tamil text replaced by placeholders (for the Colombo zones, the
+  zone-table line). Any government URL used is in `source`.
 - `data/unverified.csv` lists the 195 rows removed from the package, with the
-  reason for each. Their `id`s no longer exist in the package.
+  reason for each. Their `id`s no longer exist in the package. Nineteen of them
+  have a postcode and district that the directory lists under a different town
+  name; the reason column gives that town. The other 176 have no matching town
+  in the directory, and either no postcode or a postcode the directory does not
+  list.
 
 Rows that are in neither file were confirmed by the directory with no change.
 
@@ -370,7 +378,9 @@ Rows that are in neither file were confirmed by the directory with no change.
    them from the `old_*` and `new_*` columns.
 4. **Blank coordinates.** The 162 added rows have empty `latitude` and
    `longitude`. `Number('')` is `0`, so code that parses them directly gets
-   `0,0`. Use `getCityCoordinates()`, which returns `undefined` instead.
+   `0,0`. This release's `getCityCoordinates()` returns `undefined` for them
+   instead. The 1.0.0 version has no blank check and returns `0,0`, so upgrade
+   before relying on that result.
 5. **Placeholder postcodes.** No postcode is `"NULL"` any more. Remove any
    workaround that checks for it.
 
