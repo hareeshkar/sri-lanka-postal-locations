@@ -12,6 +12,8 @@ export interface Coordinates {
 
 /** Parses a city's stored string lat/lon into numbers. Returns undefined if either is missing/invalid. */
 export const getCityCoordinates = (city: SriLankaCity): Coordinates | undefined => {
+  // Number('') is 0, which is finite, so blank coordinates must be rejected explicitly.
+  if (city.latitude.trim() === '' || city.longitude.trim() === '') return undefined;
   const latitude = Number(city.latitude);
   const longitude = Number(city.longitude);
   if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return undefined;

@@ -1,6 +1,38 @@
 import { describe, expect, it } from 'vitest';
 import { findNearestCities, getCityCoordinates, getDistanceKm } from '../src/geo';
 import { getCityById } from '../src/cities';
+import type { SriLankaCity } from '../src/types';
+
+const blankCity = (overrides: Partial<SriLankaCity> = {}): SriLankaCity => ({
+  id: '999999',
+  district_id: '1',
+  name_en: 'Test Town',
+  name_si: '',
+  name_ta: '',
+  sub_name_en: null,
+  sub_name_si: null,
+  sub_name_ta: null,
+  postcode: '00000',
+  latitude: '',
+  longitude: '',
+  ...overrides,
+});
+
+describe('getCityCoordinates blank handling', () => {
+  it('returns undefined for blank coordinates instead of 0,0', () => {
+    // Number('') is 0, which is finite, so an unguarded parse would yield a point in the Atlantic.
+    expect(getCityCoordinates(blankCity())).toBeUndefined();
+  });
+
+  it('returns undefined when only one coordinate is blank', () => {
+    expect(getCityCoordinates(blankCity({ latitude: '7.1' }))).toBeUndefined();
+  });
+
+  it('parses real coordinates', () => {
+    expect(getCityCoordinates(blankCity({ latitude: '7.21842790', longitude: '81.85411610' })))
+      .toEqual({ latitude: 7.2184279, longitude: 81.8541161 });
+  });
+});
 
 describe('getDistanceKm', () => {
   it('is zero for identical coordinates', () => {

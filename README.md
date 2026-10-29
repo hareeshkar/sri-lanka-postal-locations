@@ -62,7 +62,7 @@ dependencies.
 ```text
 Province (9)
   └─ District (25)         — district.province_id -> province.id
-       └─ City (2170)      — city.district_id -> district.id
+       └─ City (2137)      — city.district_id -> district.id
 ```
 
 ```ts
@@ -307,6 +307,18 @@ packaged as JSON by
 [SKIDDOW/SriLankaCitiesDatabase](https://github.com/SKIDDOW/SriLankaCitiesDatabase).
 Both upstream sources are MIT-licensed — see [`NOTICE.md`](./NOTICE.md) for
 full attribution.
+
+**Postcodes and districts are checked against the official register.** Every
+postcode, post-office name, and district in `cities.json` was reconciled
+against the Sri Lanka Post *Postal Code Directory* (2022 edition), and the
+Colombo zone table. Corrections are listed with their evidence in
+[`data/changes-2022-directory.csv`](./data/changes-2022-directory.csv). Rows
+that could not be confirmed by any government source are not shipped; they
+are listed in [`data/unverified.csv`](./data/unverified.csv). The directory is
+a 2022 edition, so postcodes assigned since then are not reflected yet.
+The 162 post offices added from the directory have no Sinhala or Tamil names
+and no coordinates yet, because the government directory does not carry them.
+`getCityCoordinates()` returns `undefined` for those rows.
 
 - This is a **postal-town list**, not a complete list of informal suburbs
   or neighborhoods. For example `Kallady`, a Batticaloa suburb, is not

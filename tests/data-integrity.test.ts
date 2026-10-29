@@ -12,7 +12,9 @@ describe('raw data integrity', () => {
   it('has the expected row counts', () => {
     expect(provinces).toHaveLength(9);
     expect(districts).toHaveLength(25);
-    expect(cities).toHaveLength(2170);
+    // 2170 original rows - 195 not confirmed by Sri Lanka Post (see data/unverified.csv)
+    // + 162 post offices from the 2022 directory that were missing (see data/changes-2022-directory.csv)
+    expect(cities).toHaveLength(2137);
   });
 
   it('has unique ids within each dataset', () => {
@@ -43,16 +45,27 @@ describe('raw data integrity', () => {
     }
   });
 
-  it('every city has parseable, in-range Sri Lankan coordinates', () => {
+  it('every city has in-range Sri Lankan coordinates, or none at all', () => {
+    // Post offices added from the government directory have no coordinates yet, so
+    // latitude and longitude are both empty for them. Never half-filled, never 0,0.
     for (const c of cities) {
+      const blank = c.latitude === '' && c.longitude === '';
+      if (blank) continue;
       const lat = Number(c.latitude);
       const lon = Number(c.longitude);
+      expect(c.latitude !== '' && c.longitude !== '', `city ${c.name_en} has one coordinate blank`).toBe(true);
       expect(Number.isFinite(lat), `city ${c.name_en} has non-numeric latitude`).toBe(true);
       expect(Number.isFinite(lon), `city ${c.name_en} has non-numeric longitude`).toBe(true);
       expect(lat).toBeGreaterThan(5);
       expect(lat).toBeLessThan(10);
       expect(lon).toBeGreaterThan(79);
       expect(lon).toBeLessThan(82);
+    }
+  });
+
+  it('every city postcode is a 5-digit string (no NULL sentinels)', () => {
+    for (const c of cities) {
+      expect(c.postcode, `city ${c.name_en} (id ${c.id})`).toMatch(/^\d{5}$/);
     }
   });
 

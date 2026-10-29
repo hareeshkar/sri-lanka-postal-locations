@@ -15,9 +15,26 @@ The location data bundled in `src/data/` (`provinces.json`, `districts.json`,
 
 Both upstream sources are MIT-licensed. Their full license texts (copyright
 notice + permission notice, as MIT requires) are reproduced verbatim in
-[`THIRD-PARTY-LICENSES.md`](./THIRD-PARTY-LICENSES.md). This package does
-not claim government, official, or exclusive ownership of the underlying
-data.
+[`THIRD-PARTY-LICENSES.md`](./THIRD-PARTY-LICENSES.md).
+
+### Postcodes, post-office names and districts
+
+The postcodes, post-office names, and district assignments in `cities.json`
+were reconciled against the official government source:
+
+- Sri Lanka Post, *Postal Code Directory* (2022 edition), including its
+  scanned legend and Colombo zone table.
+- Sri Lanka Post postcode search (`slpost.gov.lk`), used as a second
+  government source.
+
+Every corrected row cites its evidence in
+[`data/changes-2022-directory.csv`](./data/changes-2022-directory.csv).
+Rows that no government source confirmed are excluded and listed in
+[`data/unverified.csv`](./data/unverified.csv).
+
+This package is not affiliated with or endorsed by Sri Lanka Post or any
+government body. The data reflects the 2022 directory and may not match
+later postcode changes.
 
 See the README's "Data attribution & limitations" section for known gaps in
 the dataset (e.g. informal place names not covered by the postal-town list).
