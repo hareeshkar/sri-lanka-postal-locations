@@ -37,6 +37,7 @@ covers the full hierarchy in one place.
   - [Validating a free-text city against a district](#validating-a-free-text-city-against-a-district)
 - [API reference](#api-reference)
 - [Data attribution & limitations](#data-attribution--limitations)
+- [Upgrading from 1.0.0: data corrections](#upgrading-from-100-data-corrections)
 - [React Native](#react-native)
 - [FAQ / troubleshooting](#faq--troubleshooting)
 - [Contributing](#contributing)
@@ -329,6 +330,53 @@ and no coordinates yet, because the government directory does not carry them.
 - Coordinates are **town centroids**, not street-level addresses.
 - This package does **not** fetch data at runtime; everything is bundled at
   build time, so it works fully offline and has predictable versioning.
+
+## Upgrading from 1.0.0: data corrections
+
+Version 1.0.0 shipped postal data that did not match the official Sri Lanka
+Post *Postal Code Directory* (2022 edition). The corrected data keeps the same
+fields and function signatures, but some values have changed. If your code
+stores `city.id`, `district_id`, `name_en` or `postcode`, you may need a
+one-time update.
+
+| Change (1.0.0 → this release) | Rows | Where to look |
+|---|---|---|
+| Removed: no government source confirmed the row | 195 | `data/unverified.csv` (`id` column) |
+| Added: post offices in the directory that were missing | 162 | `data/changes-2022-directory.csv`, `status = ADD` |
+| District changed (`district_id`) | 286 | `old_district`, `new_district` |
+| Post-office name changed | 233 | `old_name`, `new_name` |
+| Postcode changed | 83 (36 were `"NULL"`) | `old_postcode`, `new_postcode` |
+| `"NULL"` postcode placeholder | 101 → 0 | none left in the data |
+
+**The two CSV files**
+
+- `data/changes-2022-directory.csv` lists every row that differs from 1.0.0,
+  including the 162 added rows (703 in total). Columns: `id`, `status`
+  (`DISTRICT-FIX`, `SPELLING-FIX`, `POSTCODE-FIX`, `WEB-VERIFIED`, `ADD`), the
+  old and new `postcode`, `name`, and `district`, `source`, and `evidence_line`.
+  The evidence line is the exact directory line, or the government URL used.
+- `data/unverified.csv` lists the 195 rows removed from the package, with the
+  reason for each. Their `id`s no longer exist in the package.
+
+Rows that are in neither file were confirmed by the directory with no change.
+
+**Migration checklist**
+
+1. **Removed ids.** A stored `city.id` from the 195 removed rows will no
+   longer resolve. Check `data/unverified.csv` and decide what to do with each.
+2. **Changed districts.** For the 286 rows with a new district, a stored
+   `district_id` is now wrong. Update it from `new_district`.
+3. **Changed names and postcodes.** If you store names or postcodes, update
+   them from the `old_*` and `new_*` columns.
+4. **Blank coordinates.** The 162 added rows have empty `latitude` and
+   `longitude`. `Number('')` is `0`, so code that parses them directly gets
+   `0,0`. Use `getCityCoordinates()`, which returns `undefined` instead.
+5. **Placeholder postcodes.** No postcode is `"NULL"` any more. Remove any
+   workaround that checks for it.
+
+Some Ampara rows use the code `AR`, which the printed legend of the directory
+does not list. They are read as Ampara, and their evidence lines show `(AR)`.
+If you depend on those rows, check them against the directory.
 
 ## React Native
 

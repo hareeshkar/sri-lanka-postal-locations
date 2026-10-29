@@ -32,6 +32,10 @@ Every corrected row cites its evidence in
 Rows that no government source confirmed are excluded and listed in
 [`data/unverified.csv`](./data/unverified.csv).
 
+Version 1.0.0 contained the uncorrected data. The changes, the removed rows,
+and what to update in existing code are described in the README section
+"Upgrading from 1.0.0: data corrections".
+
 This package is not affiliated with or endorsed by Sri Lanka Post or any
 government body. The data reflects the 2022 directory and may not match
 later postcode changes.
