@@ -351,14 +351,18 @@ one-time update.
 **The two CSV files**
 
 - `data/changes-2022-directory.csv` lists every row that differs from 1.0.0,
-  including the 162 added rows. It has 703 rows, but row `359` is listed with a
-  name change (`Mount .Lavinia`) that the data does not contain, so 702 rows
-  differ. Columns: `id`, `status`
+  including the 162 added rows: 702 rows in total. The directory prints
+  `Mount .Lavinia` with a stray full stop. This package keeps `Mount Lavinia`,
+  as in 1.0.0, so that town is not listed. Columns: `id`, `status`
   (`DISTRICT-FIX`, `SPELLING-FIX`, `POSTCODE-FIX`, `WEB-VERIFIED`, `ADD`), the
   old and new `postcode`, `name`, and `district`, `source`, and `evidence_line`.
   The evidence line is the directory line as extracted from the PDF, with its
   Sinhala and Tamil text replaced by placeholders (for the Colombo zones, the
   zone-table line). Any government URL used is in `source`.
+- `status` gives the main reason for a change, but one row can change more than
+  one field. 39 rows change district under another status (for example
+  `SPELLING-FIX`). To find district changes, filter on `old_district` and
+  `new_district`, not on `status`.
 - `data/unverified.csv` lists the 195 rows removed from the package, with the
   reason for each. Their `id`s no longer exist in the package. Nineteen of them
   have a postcode and district that the directory lists under a different town
